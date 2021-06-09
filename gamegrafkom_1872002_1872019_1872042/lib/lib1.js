@@ -1,17 +1,16 @@
 var scene = new THREE.Scene();
-var cam = new THREE.PerspectiveCamera(45, innerWidth / innerHeight, 1, 3000);
+var camera = new THREE.PerspectiveCamera(45, innerWidth / innerHeight, 1, 3000);
+let clock = new THREE.Clock();
+let mixer;
+let kate;
 
-var renderer = new THREE.WebGLRenderer();
+var renderer = new THREE.WebGLRenderer( { canvas: artifactCanvas } );
 scene.background = new THREE.Color(0x0a0a0a);
 renderer.setSize(innerWidth, innerHeight);
-document.body.appendChild(renderer.domElement);
-cam.position.z += 1000;
-cam.position.y += 1000;
-
-// let cGeo = new THREE.BoxGeometry(1, 1, 1);
-// let cMat = new THREE.MeshBasicMaterial({ color: 0xff0000 });
-// let cMesh = new THREE.Mesh(cGeo, cMat);
-// scene.add(cMesh);
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.BasicShadowMap;
+camera.position.z += 1000;
+camera.position.y += 1000;
 
 let planeGeo = new THREE.PlaneGeometry(1000, 1000);
 let PlaneMesh = new THREE.Mesh(
@@ -20,66 +19,25 @@ let PlaneMesh = new THREE.Mesh(
 );
 PlaneMesh.rotation.x -= Math.PI / 2;
 PlaneMesh.position.y -= 0.5;
+PlaneMesh.receiveShadow = true;
 scene.add(PlaneMesh);
 
-let loaderFBX = new THREE.FBXLoader().load(
-  "models/Kate.fbx",
-  function (object) {
-    let animation = new THREE.FBXLoader().load(
-      "animations/Walking.fbx",
-      function (anim) {
-        const m = new THREE.AnimationMixer(object);
-        const idle = m.clipAction(anim.animations[0]);
-        idle.play();
-      }
-    );
 
-    scene.add(object);
-  }
-);
+const loader = new THREE.FBXLoader();
+loader.load("./models/Kate_walk.fbx", function (object) {
+  kate = object;
+  mixer = new THREE.AnimationMixer(object);
+  const action = mixer.clipAction(object.animations[0]);
+  action.play();
+  object.traverse(function (child) {
+    if (child.isMesh) {
+      child.castShadow = true;
+      child.receiveShadow = true;
+    }
+  });
+  scene.add(object);
+});
 
-
-
-let loader1 = new THREE.GLTFLoader().load(
-  "models/naruto_rigged/scene.gltf",
-  function (object) {
-    let naruto = object.scene.children[0];
-    scene.add(naruto);
-  }
-);
-
-let loader2 = new THREE.GLTFLoader().load(
-  "models/beverage can.glb",
-  function (object) {
-    let balom = object.scene.children[0];
-    scene.add(balom);
-  }
-);
-
-// const loader = new THREE.FBXLoader();
-// loader.setPath("./models/");
-// loader.load("Kate.fbx", (fbx) => {
-//   fbx.scale.setScalar(0.1);
-//   fbx.traverse((c) => {
-//     c.castShadow = true;
-//   });
-
-//   const params = {
-//     target: fbx,
-//     camera: this._camera,
-//   };
-//   // this._controls = new BasicCharacterControls(params);
-
-//   const anim = new THREE.FBXLoader();
-//   anim.setPath("./animations/");
-//   anim.load("Walking.fbx", (anim) => {
-//     const m = new THREE.AnimationMixer(fbx);
-//     this._mixers.push(m);
-//     const idle = m.clipAction(anim.animations[0]);
-//     idle.play();
-//   });
-//   this._scene.add(fbx);
-// });
 
 var directionalLight = new THREE.DirectionalLight(
   0x00ff00,
@@ -99,24 +57,101 @@ scene.add(hemiLight);
 var ambient = new THREE.AmbientLight(0x404040);
 scene.add(ambient);
 
-let controls = new THREE.OrbitControls(cam, renderer.domElement);
+let controls = new THREE.OrbitControls(camera, renderer.domElement);
 
 // First Person Controls, memerlukan adanya clock
 // let clock = new THREE.Clock();
 // let controls = new THREE.FirstPersonControls(cam, renderer.domElement);
 // controls.lookSpeed = 0.1;
 
-function update() {
-  //   controls.update(clock.getDelta()); //digunakan utk fps control
-  requestAnimationFrame(update);
-  renderer.render(scene, cam);
+
+let diam = false;
+let pulang = false;
+main();
+
+function main(){
+  window.addEventListener("resize", onWindowResize);
+  
+  animate();
+};
+
+function onWindowResize() {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+
+  renderer.setSize(window.innerWidth, window.innerHeight);
 }
-update();
 
-renderer.render(scene, cam);
+//
 
-window.addEventListener("resize", function () {
-  renderer.setSize(this.window.innerWidth, this.window.innerHeight);
-  cam.aspect = this.window.innerHeight / this.window.innerHeight;
-  cam.updateProjectionMatrix();
-});
+
+function animate() {
+  requestAnimationFrame(animate);
+
+  const delta = clock.getDelta();
+
+  jalan(kate);
+
+  if (mixer) mixer.update(delta);
+
+  renderer.render(scene, camera);
+
+}
+
+function jalan(orang) {
+  if(!diam){
+    if (orang.position.z < 200) {
+      if(!pulang){
+        orang.position.z += 1;
+      } else {
+        orang.position.z -= 1;
+      }
+    } else if (orang.position.z < -200) {
+      reset(orang);
+    } else {
+      putar_balik(orang);
+    }
+  } 
+}
+
+function belok_kiri(orang) {
+  if (orang.rotation.y <= Math.PI / 2) {
+    orang.rotation.y += 0.01;
+  }
+  orang.position.x += 1;
+}
+
+function belok_kanan(orang) {
+  if (orang.rotation.y >= -Math.PI / 2) {
+    orang.rotation.y -= 0.01;
+  } else {
+    reset(orang)
+  }
+  orang.position.x -= 1;
+}
+
+function putar_balik(orang) {
+  if (orang.rotation.y <= Math.PI / 2) {
+    orang.rotation.y += 0.01;
+    orang.position.z += 1;
+  } else if (orang.rotation.y <= Math.PI){
+    orang.rotation.y += 0.01;
+    orang.position.z -= 1;
+  } else {
+    reset(orang)
+  }
+    orang.position.x += 1;
+}
+
+function reset(orang){
+  orang.position.x = 0;
+  orang.position.y = 0;
+  orang.position.z = 0;
+  orang.rotation.y = 0;
+  pulang = false;
+}
+
+document.getElementById("buttonTerima").onclick = function() {
+  diam = false;
+  alert();
+};
