@@ -1,5 +1,5 @@
 var scene = new THREE.Scene();
-var camera = new THREE.PerspectiveCamera(45, innerWidth / innerHeight, 1, 3000);
+var camera = new THREE.PerspectiveCamera(45, innerWidth / innerHeight, 1, 10000);
 let clock = new THREE.Clock();
 let mixer;
 let kate;
@@ -37,6 +37,50 @@ loader.load("./models/Kate_walk.fbx", function (object) {
   scene.add(object);
 });
 
+let loader1 = new THREE.GLTFLoader().load(
+  "models/starbucks-coffee/scene.gltf",
+  function (object) {
+    let home = object.scene.children[0];
+    home.position.setZ(150)
+    home.position.setX(-200)
+    home.rotation.z += Math.PI/2;
+    scene.add(home);
+  }
+);
+
+const ft = new THREE.TextureLoader().load("../skyBox/px.png");
+const bk = new THREE.TextureLoader().load("../skyBox/nx.png");
+const up = new THREE.TextureLoader().load("../skyBox/py.png");
+const dn = new THREE.TextureLoader().load("../skyBox/ny.png");
+const rt = new THREE.TextureLoader().load("../skyBox/pz.png");
+const lf = new THREE.TextureLoader().load("../skyBox/nz.png");
+const materialArray = [
+  new THREE.MeshBasicMaterial({ map: ft, side: THREE.BackSide }), 
+  new THREE.MeshBasicMaterial({ map: bk, side: THREE.BackSide }), 
+  new THREE.MeshBasicMaterial({ map: up, side: THREE.BackSide }), 
+  new THREE.MeshBasicMaterial({ map: dn, side: THREE.BackSide }), 
+  new THREE.MeshBasicMaterial({ map: rt, side: THREE.BackSide }), 
+  new THREE.MeshBasicMaterial({ map: lf, side: THREE.BackSide }), 
+]
+skyboxGeo = new THREE.BoxGeometry(3000, 3000, 3000);
+
+skybox = new THREE.Mesh(skyboxGeo, materialArray);
+skybox.position.setY(1500);
+scene.add(skybox);
+
+// let loader1 = new THREE.CubeTextureLoader();
+// let skyBox = loader1.load([
+//   '../skyBox/px.png',
+//   '../skyBox/nx.png',
+//   '../skyBox/py.png',
+//   '../skyBox/ny.png',
+//   '../skyBox/pz.png',
+//   '../skyBox/nz.png',
+// ]);
+
+// scene.background = skyBox;
+
+
 var directionalLight = new THREE.DirectionalLight(
   0x00ff00,
   0.5,
@@ -73,6 +117,8 @@ function main() {
   window.addEventListener("resize", onWindowResize);
   animate();
 }
+
+
 
 function onWindowResize() {
   camera.aspect = window.innerWidth / window.innerHeight;
