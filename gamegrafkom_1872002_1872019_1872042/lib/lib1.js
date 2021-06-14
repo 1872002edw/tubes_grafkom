@@ -4,7 +4,7 @@ let clock = new THREE.Clock();
 let mixer;
 let kate;
 
-var renderer = new THREE.WebGLRenderer( { canvas: artifactCanvas } );
+var renderer = new THREE.WebGLRenderer({ canvas: artifactCanvas });
 scene.background = new THREE.Color(0x0a0a0a);
 renderer.setSize(innerWidth, innerHeight);
 renderer.shadowMap.enabled = true;
@@ -22,7 +22,6 @@ PlaneMesh.position.y -= 0.5;
 PlaneMesh.receiveShadow = true;
 scene.add(PlaneMesh);
 
-
 const loader = new THREE.FBXLoader();
 loader.load("./models/Kate_walk.fbx", function (object) {
   kate = object;
@@ -37,7 +36,6 @@ loader.load("./models/Kate_walk.fbx", function (object) {
   });
   scene.add(object);
 });
-
 
 var directionalLight = new THREE.DirectionalLight(
   0x00ff00,
@@ -64,16 +62,17 @@ let controls = new THREE.OrbitControls(camera, renderer.domElement);
 // let controls = new THREE.FirstPersonControls(cam, renderer.domElement);
 // controls.lookSpeed = 0.1;
 
-
-let diam = false;
 let pulang = false;
+let terima = false;
+let langkah = 5;
+let suhu = getSuhu();
+
 main();
 
-function main(){
+function main() {
   window.addEventListener("resize", onWindowResize);
-  
   animate();
-};
+}
 
 function onWindowResize() {
   camera.aspect = window.innerWidth / window.innerHeight;
@@ -84,74 +83,81 @@ function onWindowResize() {
 
 //
 
-
 function animate() {
   requestAnimationFrame(animate);
-
   const delta = clock.getDelta();
-
-  jalan(kate);
-
+  if (kate != null) {
+    jalan(kate);
+  }
   if (mixer) mixer.update(delta);
-
   renderer.render(scene, camera);
-
 }
 
 function jalan(orang) {
-  if(!diam){
-    if (orang.position.z < 200) {
-      if(!pulang){
-        orang.position.z += 1;
-      } else {
-        orang.position.z -= 1;
-      }
-    } else if (orang.position.z < -200) {
-      reset(orang);
-    } else {
-      putar_balik(orang);
+  if (pulang) {
+    putar_balik(orang);
+  } else {
+    orang.position.z += langkah;
+  }
+  // posisi di depan petugas
+  if (orang.position.z > 200) {
+    $("#suhu").html(suhu);
+    if (!pulang) {
+      orang.position.z -= langkah;
     }
-  } 
+    if (terima) {
+      belok_kanan(orang);
+    }
+  } // posisi sudah meninggalkan tempat ke belakang
+  else if (orang.position.z < -200) {
+    reset(orang);
+  } // posisi sudah meninggalkan tempat ke kiri
+  else if (orang.position.x < -200) {
+    reset(orang);
+  }
 }
 
 function belok_kiri(orang) {
   if (orang.rotation.y <= Math.PI / 2) {
     orang.rotation.y += 0.01;
   }
-  orang.position.x += 1;
+  orang.position.x += langkah;
 }
 
 function belok_kanan(orang) {
+  orang.position.z -= langkah;
+  orang.position.x -= langkah;
   if (orang.rotation.y >= -Math.PI / 2) {
-    orang.rotation.y -= 0.01;
-  } else {
-    reset(orang)
-  }
-  orang.position.x -= 1;
+    orang.rotation.y -= 0.05;
+  } 
 }
 
 function putar_balik(orang) {
+  console.log(orang.position);
   if (orang.rotation.y <= Math.PI / 2) {
-    orang.rotation.y += 0.01;
-    orang.position.z += 1;
-  } else if (orang.rotation.y <= Math.PI){
-    orang.rotation.y += 0.01;
-    orang.position.z -= 1;
+    orang.rotation.y += 0.05;
+    orang.position.z += langkah;
+    orang.position.x += langkah;
+  } else if (orang.rotation.y <= Math.PI) {
+    orang.rotation.y += 0.05;
+    orang.position.z -= langkah;
+    orang.position.x += langkah;
   } else {
-    reset(orang)
+    orang.position.z -= langkah;
   }
-    orang.position.x += 1;
 }
 
-function reset(orang){
+function reset(orang) {
   orang.position.x = 0;
   orang.position.y = 0;
   orang.position.z = 0;
   orang.rotation.y = 0;
   pulang = false;
+  terima = false;
+  suhu = getSuhu();
 }
 
-document.getElementById("buttonTerima").onclick = function() {
-  diam = false;
-  alert();
-};
+function getSuhu() {
+  var suhu = Math.ceil((36 + (Math.random() * 2))*10)/10;
+  return suhu;
+}
