@@ -9,8 +9,11 @@ scene.background = new THREE.Color(0x0a0a0a);
 renderer.setSize(innerWidth, innerHeight);
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.BasicShadowMap;
-camera.position.z += 1000;
-camera.position.y += 1000;
+// camera.position.z += 1000;
+// camera.position.y += 1000;
+camera.position.set(500, 500, 650);
+camera.lookAt(new THREE.Vector3(0,50,50));
+console.log(camera.position);
 
 let planeGeo = new THREE.PlaneGeometry(1000, 1000);
 let PlaneMesh = new THREE.Mesh(
@@ -48,12 +51,22 @@ let loader1 = new THREE.GLTFLoader().load(
   }
 );
 
-const ft = new THREE.TextureLoader().load("../skyBox/px.png");
-const bk = new THREE.TextureLoader().load("../skyBox/nx.png");
-const up = new THREE.TextureLoader().load("../skyBox/py.png");
-const dn = new THREE.TextureLoader().load("../skyBox/ny.png");
-const rt = new THREE.TextureLoader().load("../skyBox/pz.png");
-const lf = new THREE.TextureLoader().load("../skyBox/nz.png");
+// Thermogun (Ryan)
+const thermogun = new THREE.FBXLoader();
+thermogun.load("models/thermogun.fbx", function(object){
+  object.scale.set(8,8,8);
+  object.position.set(450, 400, 591);
+  object.rotation.y = 44.7;
+  object.rotation.x = -0.015;
+  scene.add(object);
+});
+
+const ft = new THREE.TextureLoader().load("skyBox/px.png");
+const bk = new THREE.TextureLoader().load("skyBox/nx.png");
+const up = new THREE.TextureLoader().load("skyBox/py.png");
+const dn = new THREE.TextureLoader().load("skyBox/ny.png");
+const rt = new THREE.TextureLoader().load("skyBox/pz.png");
+const lf = new THREE.TextureLoader().load("skyBox/nz.png");
 const materialArray = [
   new THREE.MeshBasicMaterial({ map: ft, side: THREE.BackSide }), 
   new THREE.MeshBasicMaterial({ map: bk, side: THREE.BackSide }), 
@@ -99,7 +112,7 @@ scene.add(hemiLight);
 var ambient = new THREE.AmbientLight(0x404040);
 scene.add(ambient);
 
-let controls = new THREE.OrbitControls(camera, renderer.domElement);
+// let controls = new THREE.OrbitControls(camera, renderer.domElement);
 
 // First Person Controls, memerlukan adanya clock
 // let clock = new THREE.Clock();

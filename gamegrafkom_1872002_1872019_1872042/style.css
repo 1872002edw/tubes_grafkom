@@ -12,3 +12,69 @@ canvas {
   left: 0;
   z-index: -9999;
 }
+
+/* ryan changes */
+#suhuContainer{
+  width: 94px;
+  height: 70px;
+  border-radius: 7px;
+  background-color: #fdf971;
+  margin-top: -289px;
+  margin-left: 635px;
+  text-align: center;
+  line-height: 70px;
+}
+
+button{
+  margin-top: 500px;
+}
+
+#buttonTerima{
+  display: inline-block;
+  padding: 15px 25px;
+  font-size: 24px;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  outline: none;
+  color: #fff;
+  background-color: #4CAF50;
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 9px #999;
+  margin-left: 350px;
+  width: 150px;
+}
+
+.buttonTerima:hover {background-color: #3e8e41}
+
+.buttonTerima:active {
+  background-color: #3e8e41;
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
+}
+
+#buttonUsir{
+  display: inline-block;
+  padding: 15px 25px;
+  font-size: 24px;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  outline: none;
+  color: #fff;
+  background-color: #f4511e;
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 9px #999;
+  margin-left: 353px;
+  width: 150px;
+}
+
+.buttonUsir:hover {background-color: #f4511e}
+
+.buttonUsir:active {
+  background-color: #f4511e;
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
+}
