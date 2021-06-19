@@ -7,6 +7,6 @@ Anggota Kelompok:
 
 
 REFERENSI
-///////////////////////////////////////////////
+
 Cara Meload FBX dan animasi:
 https://github.com/mrdoob/three.js/blob/master/examples/webgl_loader_fbx.html
