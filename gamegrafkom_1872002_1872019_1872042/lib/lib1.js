@@ -9,10 +9,9 @@ scene.background = new THREE.Color(0x0a0a0a);
 renderer.setSize(innerWidth, innerHeight);
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.BasicShadowMap;
-// camera.position.z += 1000;
-// camera.position.y += 1000;
-camera.position.set(500, 500, 650);
-camera.lookAt(new THREE.Vector3(0,50,50));
+camera.position.z += 1000;
+camera.position.y += 1000;
+camera.position.set(1.31, 191.3, 418);
 console.log(camera.position);
 
 let planeGeo = new THREE.PlaneGeometry(1000, 1000);
@@ -55,9 +54,56 @@ let loader1 = new THREE.GLTFLoader().load(
 const thermogun = new THREE.FBXLoader();
 thermogun.load("models/thermogun.fbx", function(object){
   object.scale.set(8,8,8);
-  object.position.set(450, 400, 591);
-  object.rotation.y = 44.7;
-  object.rotation.x = -0.015;
+  object.position.set(1,85,300);
+  scene.add(object);
+});
+
+// fence (Ryan)
+const fence1 = new THREE.FBXLoader();
+fence1.load("models/metalfence.fbx", function(object){
+  object.rotation.y = 29.85
+  object.position.setX(-80);
+  object.position.setZ(60);
+  scene.add(object);
+});
+
+const fence2 = new THREE.FBXLoader();
+fence2.load("models/metalfence.fbx", function(object){
+  object.rotation.y = 29.85
+  object.position.setX(80);
+  object.position.setZ(60);
+  scene.add(object);
+});
+
+const fence3 = new THREE.FBXLoader();
+fence3.load("models/metalfence.fbx", function(object){
+  object.rotation.y = 29.85
+  object.position.setX(80);
+  object.position.setZ(-148);
+  scene.add(object);
+});
+
+const fence4 = new THREE.FBXLoader();
+fence4.load("models/metalfence.fbx", function(object){
+  object.rotation.y = 29.85
+  object.position.setX(-80);
+  object.position.setZ(-148);
+  scene.add(object);
+});
+
+const fence5 = new THREE.FBXLoader();
+fence5.load("models/metalfence.fbx", function(object){
+  object.rotation.y = 29.85
+  object.position.setX(80);
+  object.position.setZ(-356);
+  scene.add(object);
+});
+
+const fence6 = new THREE.FBXLoader();
+fence6.load("models/metalfence.fbx", function(object){
+  object.rotation.y = 29.85
+  object.position.setX(-80);
+  object.position.setZ(-356);
   scene.add(object);
 });
 
@@ -112,7 +158,7 @@ scene.add(hemiLight);
 var ambient = new THREE.AmbientLight(0x404040);
 scene.add(ambient);
 
-// let controls = new THREE.OrbitControls(camera, renderer.domElement);
+let controls = new THREE.OrbitControls(camera, renderer.domElement);
 
 // First Person Controls, memerlukan adanya clock
 // let clock = new THREE.Clock();
