@@ -20,5 +20,5 @@ https://codinhood.com/post/create-skybox-with-threejs
 Cara remove object from scene
 https://stackoverflow.com/questions/18357529/threejs-remove-object-from-scene
 
-Cara memposisikan kamera
+Cara memposisikan kamera (lookAt)
 https://stackoverflow.com/questions/49836546/three-js-how-to-set-camera-position
