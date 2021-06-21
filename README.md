@@ -8,6 +8,9 @@ Anggota Kelompok:
 
 REFERENSI
 
+Cara Meload Model GLTF:
+https://youtu.be/bEakg338WGA
+
 Cara Meload FBX dan animasi:
 https://github.com/mrdoob/three.js/blob/master/examples/webgl_loader_fbx.html
 
