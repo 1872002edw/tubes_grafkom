@@ -88,7 +88,6 @@ function cekLevel() {
   } else if (level == 3 && skor == 10) {
     level = 4;
     skor = 0;
-    alertLevel(4);
     alert('Anda menang')
     location.reload(true);
   } else if (skor <= -3) {
