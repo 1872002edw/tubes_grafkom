@@ -89,6 +89,8 @@ function cekLevel() {
     level = 4;
     skor = 0;
     alertLevel(4);
+    alert('Anda menang')
+    location.reload(true);
   } else if (skor <= -3) {
     alert('anda kalah')
     location.reload(true);
