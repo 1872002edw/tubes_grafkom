@@ -10,3 +10,9 @@ REFERENSI
 
 Cara Meload FBX dan animasi:
 https://github.com/mrdoob/three.js/blob/master/examples/webgl_loader_fbx.html
+
+Cara membuat skybox:
+https://codinhood.com/post/create-skybox-with-threejs
+
+Cara remove object from scene
+https://stackoverflow.com/questions/18357529/threejs-remove-object-from-scene
