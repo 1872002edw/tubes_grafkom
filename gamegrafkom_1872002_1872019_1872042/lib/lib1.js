@@ -6,6 +6,10 @@ let kate;
 let thermo;
 let themo_sudut_awal;
 
+let starbucks;
+let mcdonalds;
+let japanese;
+
 var renderer = new THREE.WebGLRenderer({ canvas: artifactCanvas });
 scene.background = new THREE.Color(0x0a0a0a);
 renderer.setSize(innerWidth, innerHeight);
@@ -41,14 +45,38 @@ loader.load("./models/Kate_walk.fbx", function (object) {
   scene.add(object);
 });
 
-let loader1 = new THREE.GLTFLoader().load(
+
+
+let starbuckLoader = new THREE.GLTFLoader().load(
   "models/starbucks-coffee/scene.gltf",
   function (object) {
-    let home = object.scene.children[0];
-    home.position.setZ(150)
-    home.position.setX(-200)
-    home.rotation.z += Math.PI/2;
-    scene.add(home);
+    starbucks = object.scene.children[0];
+    starbucks.position.setZ(150)
+    starbucks.position.setX(-200)
+    starbucks.rotation.z += Math.PI/2;
+    scene.add(starbucks);
+  }
+);
+
+let mcdonaldsLoader = new THREE.GLTFLoader().load(
+  "models/mcdonalds/scene.gltf",
+  function (object) {
+    mcdonalds = object.scene.children[0];
+    mcdonalds.scale.set(10,20,30);
+    mcdonalds.position.setZ(200)
+    mcdonalds.position.setX(-300)
+    // mcdonalds.rotation.z += Math.PI/2;
+  }
+);
+
+let japaneseLoader = new THREE.GLTFLoader().load(
+  "models/japanese_restaurant/scene.gltf",
+  function (object) {
+    japanese = object.scene.children[0];
+    japanese.scale.set(25,30,40);
+    japanese.position.setZ(100)
+    japanese.position.setX(-350)
+    japanese.rotation.z += Math.PI/2;
   }
 );
 

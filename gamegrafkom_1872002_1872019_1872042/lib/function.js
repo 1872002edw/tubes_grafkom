@@ -67,20 +67,32 @@ function reset(orang) {
   suhu = getSuhu();
 }
 
+function removeEntity(object) {
+  var selectedObject = scene.getObjectByName(object.name);
+  scene.remove( selectedObject );
+}
+
 function cekLevel() {
   if (level == 1 && skor == 3) {
     level = 2;
     skor = 0;
     alertLevel(2);
+    removeEntity(starbucks);
+    scene.add(mcdonalds);
   } else if (level == 2 && skor == 5) {
     level = 3;
     skor = 0;
     alertLevel(3);
+    removeEntity(mcdonalds);
+    scene.add(japanese);
   } else if (level == 3 && skor == 10) {
     level = 4;
     skor = 0;
     alertLevel(4);
-  } 
+  } else if (skor <= -3) {
+    alert('anda kalah')
+    location.reload(true);
+  }
   $("#level").html(level);
   return 60 - 15 * level;
 }
