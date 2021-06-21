@@ -153,7 +153,6 @@ var directionalLight = new THREE.DirectionalLight(
 directionalLight.position.set(500, 500, 0);
 // - mengubah posisi target
 scene.add(directionalLight);
-scene.add(new THREE.DirectionalLightHelper(directionalLight));
 
 const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444);
 hemiLight.position.set(0, 200, 0);
@@ -164,15 +163,15 @@ scene.add(ambient);
 
 let controls = new THREE.OrbitControls(camera, renderer.domElement);
 
-// First Person Controls, memerlukan adanya clock
-// let clock = new THREE.Clock();
-// let controls = new THREE.FirstPersonControls(cam, renderer.domElement);
-// controls.lookSpeed = 0.1;
-
+let skor = 0;
 let pulang = false;
 let terima = false;
 let langkah = 5;
 let suhu = getSuhu();
+let timerstart = false;
+let level = 1;
+let detik = cekLevel(skor);
+let timer = 5 * detik;
 
 main();
 
@@ -180,7 +179,6 @@ function main() {
   window.addEventListener("resize", onWindowResize);
   animate();
 }
-
 
 
 function onWindowResize() {
@@ -195,7 +193,6 @@ function animate() {
   const delta = clock.getDelta();
   if (kate != null && thermo != null) {
     jalan(kate);
-
     //cam follow object
     camera.lookAt(new THREE.Vector3(kate.position.x,150,kate.position.z));
     // thermo_putar(kate,thermo,180,themo_sudut_awal);
@@ -205,85 +202,5 @@ function animate() {
   renderer.render(scene, camera);
 }
 
-function jalan(orang) {
-  if (pulang) {
-    putar_balik(orang);
-  } else {
-    orang.position.z += langkah;
-  }
-  // posisi di depan petugas
-  if (orang.position.z > 200) {
-    $("#suhu").html(suhu);
-    if (!pulang) {
-      orang.position.z -= langkah;
-    }
-    if (terima) {
-      belok_kanan(orang);
-    }
-  } // posisi sudah meninggalkan tempat ke belakang
-  else if (orang.position.z < -200) {
-    reset(orang);
-  } // posisi sudah meninggalkan tempat ke kiri
-  else if (orang.position.x < -200) {
-    reset(orang);
-  }
-}
 
-function belok_kiri(orang) {
-  if (orang.rotation.y <= Math.PI / 2) {
-    orang.rotation.y += 0.01;
-  }
-  orang.position.x += langkah;
-}
 
-function belok_kanan(orang) {
-  orang.position.z -= langkah;
-  orang.position.x -= langkah;
-  if (orang.rotation.y >= -Math.PI / 2) {
-    orang.rotation.y -= 0.05;
-  } 
-}
-
-function putar_balik(orang) {
-  console.log(orang.position);
-  if (orang.rotation.y <= Math.PI / 2) {
-    orang.rotation.y += 0.05;
-    orang.position.z += langkah;
-    orang.position.x += langkah;
-  } else if (orang.rotation.y <= Math.PI) {
-    orang.rotation.y += 0.05;
-    orang.position.z -= langkah;
-    orang.position.x += langkah;
-  } else {
-    orang.position.z -= langkah;
-  }
-}
-
-// function thermo_putar(orang, thermometer, zpatok, thermo_sudut_awal){
-//   let x = Math.max(Math.abs(orang.position.x - thermometer.position.x), 1);
-//   let y = Math.max(Math.abs(orang.position.y - thermometer.position.y), 1);
-//   let w = Math.max(Math.abs(orang.position.z - zpatok), 1);
-//   let a_square = (x*x) + (w*w);
-//   let b = Math.max(Math.abs(thermometer.position.z - zpatok), 1);
-//   let b_square = b*b;
-//   let c_square = (x*x) + (y*y);
-//   let c = Math.sqrt(c_square);
-//   let cosA = (b_square + c_square - a_square)/(2*b*c);
-//   let angle = Math.acos(cosA);
-//   thermometer.rotation.y = angle;
-// }
-
-function reset(orang) {
-  orang.position.x = 0;
-  orang.position.y = 0;
-  orang.position.z = 0;
-  orang.rotation.y = 0;
-  pulang = false;
-  terima = false;
-  suhu = getSuhu();
-}
-
-function getSuhu() {
-  var suhu = Math.ceil((36 + (Math.random() * 2))*10)/10;
-  return suhu;
-}

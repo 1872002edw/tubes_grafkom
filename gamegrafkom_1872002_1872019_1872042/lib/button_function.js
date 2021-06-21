@@ -1,9 +1,15 @@
 $(document).ready(function () {
   $("#buttonTerima").on("click", function () {
-    terima = true;
+    if (!pulang && !terima){
+      terima = true;
+      $(".menu").hide();
+    }
   });
 
   $("#buttonUsir").on("click", function () {
-    pulang = true;
+    if (!pulang && !terima){
+      pulang = true;
+      $(".menu").hide();
+    }
   });
 });
