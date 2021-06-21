@@ -3,6 +3,8 @@ var camera = new THREE.PerspectiveCamera(45, innerWidth / innerHeight, 1, 10000)
 let clock = new THREE.Clock();
 let mixer;
 let kate;
+let thermo;
+let themo_sudut_awal;
 
 var renderer = new THREE.WebGLRenderer({ canvas: artifactCanvas });
 scene.background = new THREE.Color(0x0a0a0a);
@@ -53,8 +55,10 @@ let loader1 = new THREE.GLTFLoader().load(
 // Thermogun (Ryan)
 const thermogun = new THREE.FBXLoader();
 thermogun.load("models/thermogun.fbx", function(object){
+  thermo = object;
+  themo_sudut_awal = thermo.position.y;
   object.scale.set(8,8,8);
-  object.position.set(1,85,300);
+  object.position.set(1,85,300);  
   scene.add(object);
 });
 
@@ -186,14 +190,17 @@ function onWindowResize() {
   renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-//
-
 function animate() {
   requestAnimationFrame(animate);
   const delta = clock.getDelta();
-  if (kate != null) {
+  if (kate != null && thermo != null) {
     jalan(kate);
+
+    //cam follow object
+    camera.lookAt(new THREE.Vector3(kate.position.x,150,kate.position.z));
+    // thermo_putar(kate,thermo,180,themo_sudut_awal);
   }
+
   if (mixer) mixer.update(delta);
   renderer.render(scene, camera);
 }
@@ -251,6 +258,20 @@ function putar_balik(orang) {
     orang.position.z -= langkah;
   }
 }
+
+// function thermo_putar(orang, thermometer, zpatok, thermo_sudut_awal){
+//   let x = Math.max(Math.abs(orang.position.x - thermometer.position.x), 1);
+//   let y = Math.max(Math.abs(orang.position.y - thermometer.position.y), 1);
+//   let w = Math.max(Math.abs(orang.position.z - zpatok), 1);
+//   let a_square = (x*x) + (w*w);
+//   let b = Math.max(Math.abs(thermometer.position.z - zpatok), 1);
+//   let b_square = b*b;
+//   let c_square = (x*x) + (y*y);
+//   let c = Math.sqrt(c_square);
+//   let cosA = (b_square + c_square - a_square)/(2*b*c);
+//   let angle = Math.acos(cosA);
+//   thermometer.rotation.y = angle;
+// }
 
 function reset(orang) {
   orang.position.x = 0;
