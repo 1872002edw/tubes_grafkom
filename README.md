@@ -22,3 +22,6 @@ https://stackoverflow.com/questions/18357529/threejs-remove-object-from-scene
 
 Cara memposisikan kamera (lookAt)
 https://stackoverflow.com/questions/49836546/three-js-how-to-set-camera-position
+
+Model :
+https://sketchfab.com/3d-models/categories/furniture-home?date=week&sort_by=-likeCount
